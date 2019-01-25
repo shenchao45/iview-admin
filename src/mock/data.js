@@ -1,18 +1,27 @@
 import Mock from 'mockjs'
 import { doCustomTimes } from '@/libs/util'
 import orgData from './data/org-data'
+
 const Random = Mock.Random
 
-export const getTableData = req => {
-  let tableData = []
-  doCustomTimes(5, () => {
-    tableData.push(Mock.mock({
-      name: '@name',
-      email: '@email',
-      createTime: '@date'
-    }))
+let tableData = []
+for (let i = 0; i < 1000; i++) {
+  tableData.push({
+    name: 'name ' + i,
+    age: i,
+    address: 'address' + i
   })
-  return tableData
+}
+
+export const getTableData = req => {
+  let { pageSize, pageNo } = JSON.parse(req.body)
+  let startIndex = pageSize * (pageNo - 1)
+  let res = {
+    data: tableData.slice(startIndex, startIndex + pageSize),
+    count: tableData.length
+  }
+  window.console.log(res)
+  return res
 }
 
 export const getDragList = req => {
